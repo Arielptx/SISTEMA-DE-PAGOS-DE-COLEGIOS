@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Pagos{% endblock %}
+
+{% block content %}
+    <h1 class="title">Gestión de Pagos</h1>
+
+    <!-- Mensajes Flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Botón asignar pago -->
+    <div class="text-center" style="margin-bottom: 20px;">
+        <a href="{{ url_for('payment_assign') }}" class="button">Asignar Pago</a>
+    </div>
+
+    <h2 class="subtitle">Lista de Pagos</h2>
+
+    {% if pagos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Estudiante</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Fecha de Asignación</th>
+                    <th>Fecha de Confirmación</th>
+                    <th>Observación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pago, estudiante in pagos %}
+                    <tr>
+                        <td>{{ estudiante.nombre }} {{ estudiante.apellido }}</td>
+                        <td>{{ pago.monto }}</td>
+                        <td>{{ pago.estado }}</td>
+                        <td>{{ pago.fecha_asignacion.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ pago.fecha_confirmacion.strftime('%Y-%m-%d %H:%M:%S') if pago.fecha_confirmacion else '-' }}</td>
+                        <td>{{ pago.observacion or '' }}</td>
+                        <td>
+                            {% if pago.estado == 'Pendiente' %}
+                                <form action="{{ url_for('payment_confirm', pago_id=pago.id) }}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="button" onclick="return confirm('¿Confirmar pago?')">Confirmar</button>
+                                </form>
+                            {% else %}
+                                <span style="color: #999;">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-data">No hay pagos registrados.</p>
+    {% endif %}
+{% endblock %}

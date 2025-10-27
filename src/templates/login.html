@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Administrador</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Jost', sans-serif;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+        }
+        .main {
+            width: 350px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 5px 20px 50px #000;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        h1 {
+            color: #fff;
+            font-size: 2.3em;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        p {
+            width: 100%;
+            margin: 10px 0;
+        }
+        label {
+            color: #fff;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 60%;
+            height: 10px;
+            background: #e0dede;
+            margin: 10px auto;
+            padding: 12px;
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        input[type="submit"] {
+            width: 60%;
+            height: 40px;
+            margin: 20px auto;
+            color: #fff;
+            background: #573b8a;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s ease-in;
+        }
+        input[type="submit"]:hover {
+            background: #6d44b8;
+        }
+        .flash-success {
+            color: green;
+            font-size: 1em;
+            margin: 10px 0;
+        }
+        .flash-danger {
+            color: red;
+            font-size: 1em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Iniciar Sesión</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.correo.label }}<br>
+                {{ form.correo(size=32) }}
+            </p>
+            <p>
+                {{ form.password.label }}<br>
+                {{ form.password(size=32) }}
+            </p>
+            <p>{{ form.submit() }}</p>
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                <p class="flash-{{ category }}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </form>
+    </div>
+</body>
+</html>
